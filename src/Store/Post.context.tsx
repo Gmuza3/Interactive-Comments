@@ -8,13 +8,17 @@ export type PostTypes ={
     post:RootObject ;
     isLoading:boolean;
     increase:(id:number,condition:string) => void;
-    decrease:(id:number,condition:string) => void
+    decrease:(id:number,condition:string) => void;
+    updatePost:(text: string, id: number, replyId: number) => void;
+    comment:string[]
 }
 
 const PostContext = createContext<PostTypes | null>(null);
 
 const PostContextPrvoider = ({ children }: PropsWithChildren) => {
     const [postState, setPostState] = useState<RootObject | null>(null);
+    const[comment,setComment] = useState<Array<string>>([])
+
     const getData = async () => {
       const res = await fetch("http://localhost:3000/data");
       if (!res.ok) {
@@ -108,6 +112,7 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
   
     const addPosts = (text: string, id: number) => {
       if (!postState) return;
+      setComment(prev => [...prev,text])
       const date = new Date();
       const now = date.toLocaleString();
       const updatedComments = postState.comments.map(item => {
@@ -118,10 +123,12 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
             createdAt: now,
             score: 0,
             replyingTo: '',
-            user: {image:{
-              png: "./images/avatars/image-juliusomo.png",
-              webp: ""
-            },username: "juliusomo" } 
+            user: {
+              image: {
+                png: "./images/avatars/image-juliusomo.png",
+                webp: ""
+              }, username: "juliusomo"
+            },
           };
           const updatedReplies = [...item.replies, newReply];
           return { ...item, replies: updatedReplies };
@@ -141,33 +148,29 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
 
       setPostState({...postState,comments:removeComment})
     };
-    const updatePost =(text:string,id:number) =>{
-        const date = new Date();
-        const now = date.toLocaleString();
-        const updateComments = postState.comments.map((item) =>{
-          if(item.id === id){
-            const newReply: Reply = {
-              id: Date.now(),
-              content: text,
-              createdAt: now,
-              score: 0,
-              replyingTo: '',
-              user: {image:{
-                png: "./images/avatars/image-juliusomo.png",
-                webp: ""
-              },username: "juliusomo" } 
-            };
-            const updateReply = [...item.replies,newReply]
-            return {...item,replies:updateReply}
-          }
-          return item;
-        })
-        setPostState({ ...postState, comments: updateComments });
+ const updatePost = (text: string, commentId: number, replyId: number) => {
+    if (!postState) return;
+
+    const updatedComments = postState.comments.map(comment => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          replies: comment.replies.map(reply => {
+            if (reply.id === replyId) {
+              return { ...reply, content: text };
+            }
+            return reply;
+          }),
+        };
       }
-  
+      return comment;
+    });
+
+    setPostState({ ...postState, comments: updatedComments });
+  };
     return (
       <PostContext.Provider
-        value={{ addPosts, removePost, post: postState, isLoading, increase,decrease }}
+        value={{ addPosts, removePost, post: postState, isLoading, increase,decrease,updatePost,comment }}
       >
         {children}
       </PostContext.Provider>

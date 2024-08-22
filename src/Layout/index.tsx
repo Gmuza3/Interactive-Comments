@@ -71,7 +71,7 @@ const Layout = () => {
             {replyPostId[item.id] &&  (
               <CurrentUserReplies inputValue={inputValue} SubmitButton={SubmitButton} InputChange={InputChange} index={index} id={item.id} post={post}/>
             )}
-              <ExistingReplyes replies={item.replies}/>    
+              <ExistingReplyes replies={item.replies} commentsId = {item.id}/>    
           </li>
         ))} 
       </ul>

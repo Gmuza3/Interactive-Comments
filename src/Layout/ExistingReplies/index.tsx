@@ -1,14 +1,22 @@
+import { useState } from "react";
 import { Reply } from "../../Static/types"
 import { PostTypes, usePostContext } from "../../Store/Post.context";
 
 type ReplyProps ={
-  replies:Reply[]
+  replies:Reply[],
+  commentsId: number
 }
 
 const ExistingReplies = (props:ReplyProps) => {
-  const {removePost} = usePostContext() as PostTypes;
-  const {replies} = props;
-  const{increase,decrease} = usePostContext() as PostTypes
+  const {removePost,updatePost,increase,decrease} = usePostContext() as PostTypes;
+  const {replies,commentsId} = props;
+  const[showEdit,setShowEdit] = useState(false)
+  const [editText,setEditText] = useState("")
+
+  const handleShwoButton = () =>{
+    setShowEdit(prev => !prev)
+  }
+
   return (
     <ul className="w-full">
       {replies && (
@@ -37,9 +45,29 @@ const ExistingReplies = (props:ReplyProps) => {
                           <span className="text-gray font-sans text-[14px]">{item.createdAt}</span>    
                       </div>
                   </div>
-                  <div className="w-full">
+                  {!showEdit &&
+                    <div className="w-full">
                       <span className="text-gray font-sans text-[16px]">{item.content}</span>
-                  </div>
+                    </div>
+                  }
+                  {showEdit && item.user.username === 'juliusomo' &&
+                    <div className="w-full">
+                      <textarea 
+                          placeholder="Write Comment" 
+                          className="w-full min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                      />
+                      <div className="flex gap-4 w-[35%]">
+                          <button type="button" className="px-4 py-1 text-[#fff] bg-blue  rounded-[6px]  w-[auto] h-[40px] uppercase hover:bg-slate-300"
+                            onClick={() => {
+                              updatePost(editText,commentsId,item.id);
+                              setShowEdit(false);
+                            }}
+                          >Reply</button>
+                      </div>
+                    </div>
+                  }
                 </div>
                 <div className="w-[10%]">
                     <button 
@@ -51,13 +79,22 @@ const ExistingReplies = (props:ReplyProps) => {
                         <span>Reply</span>
                     </button>
                     {item.user.username === 'juliusomo' && (
-                      <button 
-                        type="button" 
-                        className="px-4 py-1 text-red-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] uppercase"
-                        onClick={() => removePost(item.id)}
-                        >
-                        Delete
-                      </button>
+                        <>
+                          <button 
+                            type="button" 
+                            className="px-4 py-1 text-red-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] uppercase"
+                            onClick={() => removePost(item.id)}
+                            >
+                            Delete
+                          </button>
+                          <button
+                            type="button" 
+                            className="px-4 py-1 text-green-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] uppercase"
+                            onClick={() => handleShwoButton()}
+                            >
+                            Edit
+                          </button>
+                        </>                      
                     )
                     }
                 </div>
