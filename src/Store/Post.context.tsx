@@ -38,7 +38,12 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
             setPostState(post)
         }
     },[post])
-    
+
+    // useEffect(() =>{
+    //   if(postState){
+    //     localStorage.setItem('postState',JSON.stringify(postState));
+    //   }
+    // },[postState])
     console.log(postState)
     if (error) {
       return <div>{error.message}</div>;
@@ -148,26 +153,27 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
 
       setPostState({...postState,comments:removeComment})
     };
- const updatePost = (text: string, commentId: number, replyId: number) => {
-    if (!postState) return;
+    const updatePost = (text: string, commentId: number, replyId: number) => {
+        if (!postState) return;
 
-    const updatedComments = postState.comments.map(comment => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          replies: comment.replies.map(reply => {
-            if (reply.id === replyId) {
-              return { ...reply, content: text };
-            }
-            return reply;
-          }),
-        };
-      }
-      return comment;
-    });
+        const updatedComments = postState.comments.map(comment => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              replies: comment.replies.map(reply => {
+                if (reply.id === replyId) {
+                  return { ...reply, content: text };
+                }
+                return reply;
+              }),
+            };
+          }
+          return comment;
+        });
 
-    setPostState({ ...postState, comments: updatedComments });
-  };
+        setPostState({ ...postState, comments: updatedComments });
+    };
+
     return (
       <PostContext.Provider
         value={{ addPosts, removePost, post: postState, isLoading, increase,decrease,updatePost,comment }}
