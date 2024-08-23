@@ -16,6 +16,7 @@
           gray: "#52525b",
           nameBlack: "#09090b",
           hoverGray: "#a1a1aa",
+          white:"#fff"
         },
         screens: {
           "mobile-max": { "max": "380px" },
