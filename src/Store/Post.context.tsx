@@ -9,7 +9,7 @@ export type PostTypes ={
     isLoading:boolean;
     increase:(id:number,condition:string) => void;
     decrease:(id:number,condition:string) => void;
-    updatePost:(text: string, id: number, replyId: number) => void;
+    updatePost:(text: string, id: number, replyId: number,content:string) => void;
     comment:string[];
     addInInnerReply:(text:string,id:number) => void;
 }
@@ -81,40 +81,67 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
                 }
                 return item;
             });
-    
             setPostState({ ...postState, comments: increaseScore });
         }
+        else if (condition === 'innerReply') {
+          if (!postState) return;
+          const increaseScore = postState.comments.map((item) => {
+              if (item.replies) {
+                  const updatedReplies = item.innerReplies.map((reply) => {
+                      if (reply.id === id) {
+                          return { ...reply, score: reply.score + 1 };
+                      }
+                      return reply;
+                  });
+                  return { ...item, innerReplies: updatedReplies };
+              }
+              return item;
+          });
+          setPostState({ ...postState, comments: increaseScore });
+      }
     }
-    
-    function decrease(id:number,condition:string){
-        if(condition==="comments"){
-            if(!postState) return;
-            const decreaseScore = postState?.comments.map((item) =>{
-                if(item.id === id){
-                    return {...item,score:item.score>0? item.score- 1 : item.score = 0 }
-                }
-                return item
-            })
-            setPostState({...postState, comments:decreaseScore})
-        }
-        else if(condition==="reply"){
-            if(!postState) return;
-            const decreaseScore = postState.comments.map((comment) =>{
-                if(comment.replies){
-                    const updatedReplies = comment.replies.map((reply) =>{
-                        if (reply.id === id) {
-                            return { ...reply, score: reply.score>0? reply.score- 1 : reply.score = 0 };
-                        }
-                        return reply;
-                    })
-                    return {...comment,replies:updatedReplies}
-                }
-                return comment
-            })
-
-            setPostState({...postState,comments:decreaseScore})
-        }
-    }
+    function decrease(id: number, condition: string) {
+      if (!postState) return;
+  
+      let updatedComments = [...postState.comments];
+  
+      if (condition === "comments") {
+          updatedComments = updatedComments.map((item) => {
+              if (item.id === id) {
+                  return { ...item, score: item.score > 0 ? item.score - 1 : 0 };
+              }
+              return item;
+          });
+      } else if (condition === "reply") {
+          updatedComments = updatedComments.map((comment) => {
+              if (comment.replies) {
+                  const updatedReplies = comment.replies.map((reply) => {
+                      if (reply.id === id) {
+                          return { ...reply, score: reply.score > 0 ? reply.score - 1 : 0 };
+                      }
+                      return reply;
+                  });
+                  return { ...comment, replies: updatedReplies };
+              }
+              return comment;
+          });
+      } else if (condition === "innerReply") {
+          updatedComments = updatedComments.map((comment) => {
+              if (comment.innerReplies) {
+                  const updatedInnerReplies = comment.innerReplies.map((reply) => {
+                      if (reply.id === id) {
+                          return { ...reply, score: reply.score > 0 ? reply.score - 1 : 0 };
+                      }
+                      return reply;
+                  });
+                  return { ...comment, innerReplies: updatedInnerReplies };
+              }
+              return comment;
+          });
+      }
+      setPostState({ ...postState, comments: updatedComments });
+  }
+  
   
     const addPosts = (text: string, id: number) => {
       if (!postState) return;
@@ -156,20 +183,32 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
 
       setPostState({...postState,comments:removeComment})
     };
-    const updatePost = (text: string, commentId: number, replyId: number) => {
+    const updatePost = (text: string, commentId: number, replyId: number,content:string) => {
         if (!postState) return;
-
         const updatedComments = postState.comments.map(comment => {
           if (comment.id === commentId) {
-            return {
-              ...comment,
-              replies: comment.replies.map(reply => {
-                if (reply.id === replyId) {
-                  return { ...reply, content: text };
-                }
-                return reply;
-              }),
-            };
+              if(content === 'reply'){
+                return {
+                  ...comment,
+                  replies: comment.replies.map(reply => {
+                    if (reply.id === replyId) {
+                      return { ...reply, content: text };
+                    }
+                    return reply;
+                  }),
+                };
+              }
+              else{
+                return {
+                  ...comment,
+                  innerReplies: comment.innerReplies.map(reply => {
+                    if (reply.id === replyId) {
+                      return { ...reply, content: text };
+                    }
+                    return reply;
+                  }),
+                };
+              }
           }
           return comment;
         });

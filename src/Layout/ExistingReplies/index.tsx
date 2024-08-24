@@ -128,7 +128,7 @@ const ExistingReplies = (props: ReplyProps) => {
                           type="button"
                           className="px-4 py-1 text-[#fff] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
                           onClick={() => {
-                            updatePost(editText, commentsId, item.id);
+                            updatePost(editText, commentsId, item.id,"reply");
                             setShowEdit(null);
                             setEditText("");
                           }}
@@ -252,7 +252,20 @@ const ExistingReplies = (props: ReplyProps) => {
                   </div>
                 </div>
               )}
-              <InnerComments innerReplies={innerReplies} replies={replies}/>
+              {item.user.username === "ramsesmiron" && (
+                <InnerComments 
+                  innerReplies={innerReplies} 
+                  replies={replies} 
+                  handleKeyDown={handleKeyDown} 
+                  handleShowButton={handleShowButton} 
+                  toggleFunc={toggleFunc}  
+                  showEdit={showEdit} 
+                  editText={editText}
+                  setEditText={setEditText}
+                  setShowEdit={setShowEdit} 
+                  commentsId ={commentsId} 
+                />
+              )}
               {/* add form just form */}
             </li>
           );
