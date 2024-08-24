@@ -20,7 +20,8 @@
         },
         "username": "amyrobson"
       },
-      "replies": []
+      "replies": [],
+      "innerReplies":[]
     },
     {
       "id": 2,
@@ -63,7 +64,8 @@
             "username": "juliusomo"
           }
         }
-      ]
+      ],
+      "innerReplies":[]
     }
   ]
   }

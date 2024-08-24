@@ -17,6 +17,14 @@ interface UserImage {
     replyingTo: string;
     user: User;
   }
+  export interface InnerReply {
+    id: number;
+    content: string;
+    createdAt: string;
+    score: number;
+    replyingTo: string;
+    user: User;
+  }
   
   interface Comment {
     id: number;
@@ -25,6 +33,7 @@ interface UserImage {
     score: number;
     user: User;
     replies: Reply[];
+    innerReply:InnerReply[];
   }
   
   export interface RootObject {

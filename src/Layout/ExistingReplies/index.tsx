@@ -1,19 +1,32 @@
-import { useState } from "react";
-import { Reply } from "../../Static/types";
+import { FormEvent, useEffect, useState } from "react";
+import { InnerReply, Reply, User } from "../../Static/types";
 import { PostTypes, usePostContext } from "../../Store/Post.context";
 
 type ReplyProps = {
   replies: Reply[];
   commentsId: number;
+  toggleFunc:(id:number) => void;
+  replyPostId:{[key:number]: boolean};
+  user:User;
+  InputChange:(e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  inputValue:string;
+  id:number;
+  setReplyPostId: React.Dispatch<React.SetStateAction<{ [key: number]: boolean }>>;
+  InnerReplies:InnerReply[]
 };
 
 const ExistingReplies = (props: ReplyProps) => {
-  const { removePost, updatePost, increase, decrease } = usePostContext() as PostTypes;
-  const { replies, commentsId } = props;
+  const { removePost, updatePost, increase, decrease,addInInnerReply } = usePostContext() as PostTypes;
+  const { replies, commentsId ,replyPostId,toggleFunc,user,inputValue,InputChange,id,setReplyPostId,InnerReplies} = props;
 
   const [showEdit, setShowEdit] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
 
+  const innerReplySubmit =( id:number,e:FormEvent) =>{
+    e.preventDefault()
+    setReplyPostId((prev) => ({...prev,[id]:false}));
+    addInInnerReply(inputValue,id)
+  }
   const handleShowButton = (id: number, currentText: string) => {
     if (showEdit === id) {
       setShowEdit(null);
@@ -25,9 +38,11 @@ const ExistingReplies = (props: ReplyProps) => {
   };
   const handleKeyDown =(e: React.KeyboardEvent<HTMLTextAreaElement>) =>{
     if(e.key === "Enter" && !e.shiftKey){
-      e.preventDefault()
+      e.preventDefault();
+      // SubmitButton(id,e);
     }
   }
+
 
   return (
     <ul className="w-full">
@@ -99,27 +114,69 @@ const ExistingReplies = (props: ReplyProps) => {
                     </div>
                   )}
                 </div>
-                <div className="min-w-[10%]">
-                  {item.user.username === "juliusomo" && (
-                    <div className="flex">
+                <div className="min-w-[15%] flex justify-end">
+                  {item.user.username === "juliusomo" ? (
+                    <div className="flex gap-2">
                       <button
                         type="button"
-                        className="px-2 py-1 text-red-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] uppercase"
+                        className="flex items-center gap-2 px-2 py-1 text-red-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] font-sans font-semibold uppercase"
                         onClick={() => removePost(item.id)}
                       >
-                        Delete
+                      <svg width="12" height="14" xmlns="http://www.w3.org/2000/svg"><path d="M1.167 12.448c0 .854.7 1.552 1.555 1.552h6.222c.856 0 1.556-.698 1.556-1.552V3.5H1.167v8.948Zm10.5-11.281H8.75L7.773 0h-3.88l-.976 1.167H0v1.166h11.667V1.167Z" fill="#ED6368"/></svg>                        <span>Delete</span>
                       </button>
                       <button
                         type="button"
-                        className="px-2 py-1 text-green-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] uppercase"
+                        className="flex items-center gap-2 px-2 py-1 text-sky-900 hover:bg-[#a1a1aa] font-sans font-semibold rounded-md w-[auto] h-[40px] uppercase"
                         onClick={() => handleShowButton(item.id, item.content)}
                       >
-                        Edit
+                        <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg"><path d="M13.479 2.872 11.08.474a1.75 1.75 0 0 0-2.327-.06L.879 8.287a1.75 1.75 0 0 0-.5 1.06l-.375 3.648a.875.875 0 0 0 .875.954h.078l3.65-.333c.399-.04.773-.216 1.058-.499l7.875-7.875a1.68 1.68 0 0 0-.061-2.371Zm-2.975 2.923L8.159 3.449 9.865 1.7l2.389 2.39-1.75 1.706Z" fill="#5357B6"/></svg>
+                        <span>Edit</span>
                       </button>
                     </div>
-                  )}
+                  )
+                  :(
+                  <button 
+                  className="flex items-center fill-[#5357B6] hover:fill-[#a1a1aa] text-blue border-none font-sans font-semibold hover:text-[#a1a1aa] gap-2"
+                  onClick={() => toggleFunc(item.id)}
+                    >
+                  <svg  width="14" height="13" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"/>
+                  </svg>
+                  <span>Reply</span>
+                  </button>
+                  )
+                  }
                 </div>
               </div>
+              {replyPostId[item.id] && (
+                <div className="w-full flex justify-end">
+                    <div className="w-[80%] bg-white border border-transparent rounded-lg p-7 mt-0 flex justify-between items-start gap-5">
+                        {user && (
+                            <div className="w-[10%] mt-2">
+                                <img src={user.image.png} alt="" />  
+                            </div>
+                        )}
+                        <form 
+                          action="" 
+                          className="w-[90%] flex gap-9 mt-3" 
+                          onSubmit={(e) => {
+                            innerReplySubmit(id, e);
+                          }}
+                        >
+                            <textarea 
+                                placeholder="Write Comment" 
+                                className="w-full max-w-[65%] min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
+                                value={inputValue} 
+                                onChange={InputChange}
+                                onKeyDown={handleKeyDown}
+                            />
+                            <div className="flex gap-4 w-[35%]">
+                                <button type="submit" className="px-4 py-1 text-[#fff] bg-blue  rounded-[6px]  w-[auto] h-[40px] uppercase hover:bg-slate-300">Reply</button>
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                )}
             </li>
           );
         })}

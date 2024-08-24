@@ -23,7 +23,7 @@ const CurrentUserReplies = (props:Props) => {
   return (
         <div className="bg-white border border-transparent rounded-lg p-7 mt-2 w-full flex justify-between gap-5">
             {post && (
-               <div className="w-[10%]">
+               <div className="w-[10%] mt-2">
                    <img src={post.currentUser.image.png} alt="" />  
                </div>
             )}

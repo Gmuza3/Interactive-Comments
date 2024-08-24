@@ -6,7 +6,7 @@ import CurrentUserReplies from "./CurrentUserReplies";
 const Layout = () => {
   const[replyPostId,setReplyPostId] = useState<{[key:number] : boolean}>({});
   const[inputValue,setInputValue] = useState('');
-  const {addPosts,post,isLoading,increase,decrease} = usePostContext() as PostTypes
+  const {addPosts,post,isLoading,increase,decrease,addInInnerReply} = usePostContext() as PostTypes
 
   const InputChange =(e: React.ChangeEvent<HTMLTextAreaElement>) =>{
     setInputValue(e.target.value);
@@ -72,7 +72,18 @@ const Layout = () => {
             {replyPostId[item.id] &&  (
               <CurrentUserReplies inputValue={inputValue} SubmitButton={SubmitButton} InputChange={InputChange} index={index} id={item.id} post={post}/>
             )}
-              <ExistingReplyes replies={item.replies} commentsId = {item.id}/>    
+              <ExistingReplyes 
+              setReplyPostId={setReplyPostId} 
+              id={item.id} 
+              inputValue={inputValue} 
+              InputChange={InputChange} 
+              replies={item.replies} 
+              commentsId = {item.id} 
+              toggleFunc={toggleFunc} 
+              replyPostId={replyPostId} 
+              user ={post.currentUser}
+              InnerReplies = {item.innerReply}
+              />  
           </li>
         ))} 
       </ul>

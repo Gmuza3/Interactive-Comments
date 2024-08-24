@@ -10,7 +10,8 @@ export type PostTypes ={
     increase:(id:number,condition:string) => void;
     decrease:(id:number,condition:string) => void;
     updatePost:(text: string, id: number, replyId: number) => void;
-    comment:string[]
+    comment:string[];
+    addInInnerReply:(text:string,id:number) => void;
 }
 
 const PostContext = createContext<PostTypes | null>(null);
@@ -135,8 +136,10 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
               }, username: "juliusomo"
             },
           };
-          const updatedReplies = [...item.replies, newReply];
-          return { ...item, replies: updatedReplies };
+          if(newReply.content !== ""){
+            const updatedReplies = [...item.replies, newReply];
+            return { ...item, replies: updatedReplies };
+          }
         }
         return item;
       });
@@ -173,10 +176,40 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
 
         setPostState({ ...postState, comments: updatedComments });
     };
-
+    const addInInnerReply = (text: string, id: number) => {
+      if (!postState) return;
+      const date = new Date();
+      const now = date.toLocaleString();
+      const updatedComments = postState.comments.map(comment => {
+        if (comment.id === id) {
+          const newReply: Reply = {
+            id: Date.now(),
+            content: text,
+            createdAt: now,
+            score: 0,
+            replyingTo: '',
+            user: {
+              image: {
+                png: "./images/avatars/image-juliusomo.png",
+                webp: ""
+              },
+              username: "juliusomo"
+            },
+          };
+    
+          // Ensure innerReplies is an array
+          const updatedReplies = Array.isArray(comment.innerReplies) ? [...comment.innerReplies, newReply] : [newReply];
+          return { ...comment, innerReplies: updatedReplies };
+        }
+        return comment;
+      });
+      setPostState({ ...postState, comments: updatedComments });
+    };
+    
+    
     return (
       <PostContext.Provider
-        value={{ addPosts, removePost, post: postState, isLoading, increase,decrease,updatePost,comment }}
+        value={{ addPosts, removePost, post: postState, isLoading, increase,decrease,updatePost,comment,addInInnerReply }}
       >
         {children}
       </PostContext.Provider>
