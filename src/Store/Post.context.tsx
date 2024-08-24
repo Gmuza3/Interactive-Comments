@@ -197,7 +197,6 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
             },
           };
     
-          // Ensure innerReplies is an array
           const updatedReplies = Array.isArray(comment.innerReplies) ? [...comment.innerReplies, newReply] : [newReply];
           return { ...comment, innerReplies: updatedReplies };
         }

@@ -17,7 +17,7 @@ interface UserImage {
     replyingTo: string;
     user: User;
   }
-  export interface InnerReply {
+  export interface InnerReplies {
     id: number;
     content: string;
     createdAt: string;
@@ -33,7 +33,7 @@ interface UserImage {
     score: number;
     user: User;
     replies: Reply[];
-    innerReply:InnerReply[];
+    innerReplies:InnerReplies[];
   }
   
   export interface RootObject {
