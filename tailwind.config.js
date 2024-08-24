@@ -22,7 +22,7 @@
           "mobile-max": { "max": "380px" },
           'ss-max':{"max":"490px"},
           'sm-max': { 'max': '620px' },    
-          'md-max': { 'max': '800px' },   
+          'md-max': { 'max': '860px' },   
           'lg-max': { 'max': '1024px' },  
           'xl-max': { 'max': '1280px' },  
           '2xl-max': { 'max': '1536px' },  

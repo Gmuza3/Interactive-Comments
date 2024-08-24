@@ -1,18 +1,20 @@
-import { Reply} from "../../Static/types";
-import { PostTypes, usePostContext } from "../../Store/Post.context";
+import { memo } from "react";
+import { InnerReplies, Reply } from "../../Static/types";
 
 type User ={
+  innerReplies:InnerReplies[],
   replies:Reply[]
 }
 
-const Comments = (props:User) => {
-  const{replies} = props 
-  const{commentArr} =usePostContext() as PostTypes
+const InnerComments = (props:User) => {
+  const{innerReplies,replies} = props 
 
+  console.log(innerReplies)
   return (
     <ul className="w-full ">
-      {commentArr && replies && replies.length > 1 && (
-        commentArr.map((item,index) =>{
+      {innerReplies.length > 0 &&  (
+        innerReplies.map((item,index) =>{
+          console.log(item.content)
           return(
             <li key={index} className="h-full w-full list-none pl-16 pt-2 flex flex-col items-start gap-2 ">
               <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8">
@@ -38,7 +40,7 @@ const Comments = (props:User) => {
                       </div>
                   </div>
                   <div className="w-full">
-                      <span className="text-gray font-sans text-[16px]">{item}</span>
+                      <span className="text-gray font-sans text-[16px]">{item.content}</span>
                   </div>
                 </div>
                 <div className="w-[10%]">
@@ -60,4 +62,4 @@ const Comments = (props:User) => {
   )
 };
 
-export default Comments;
+export default memo(InnerComments);
