@@ -13,10 +13,15 @@ const Layout = () => {
   } 
 
   const SubmitButton =(id:number,e:FormEvent) =>{
-    e.preventDefault()
-    addPosts(inputValue,id)
-    setInputValue("")
-    setReplyPostId((prev) => ({...prev,[id]:false}))
+    e.preventDefault();
+    addPosts(inputValue,id);
+    setInputValue("");
+    setReplyPostId((prev) => ({...prev,[id]:false}));
+  }
+  const innerSubmitButton =(id:number,e:FormEvent)=>{
+    e.preventDefault();
+    addInInnerReply(inputValue,id);
+    setReplyPostId((prev) => ({...prev,[id]:false}));
   }
   const toggleFunc = (id:number) =>{
     setReplyPostId((prev) => ({...prev, [id]: !prev[id] }));
@@ -57,7 +62,7 @@ const Layout = () => {
                     <span className="text-gray font-sans text-[16px]">{item.content}</span>
                 </div>
               </div>
-              <div className="w-[10%] md-max:absolute md-max:right-14 md-max:z-10 md-max:bottom-5 md-max:flex-shrink-0">
+              <div className="min-w-[15%] flex justify-end  md-max:absolute md-max:right-14 md-max:z-10 md-max:bottom-5 md-max:flex-shrink-0">
                   <button 
                     className="flex items-center fill-[#5357B6] hover:fill-[#a1a1aa] text-blue border-none font-sans font-semibold hover:text-[#a1a1aa] gap-2"
                     onClick={() => toggleFunc(item.id)}
@@ -82,7 +87,8 @@ const Layout = () => {
               toggleFunc={toggleFunc} 
               replyPostId={replyPostId} 
               user ={post.currentUser}
-              InnerReplies = {item.innerReply}
+              innerReplies = {item.innerReplies}
+              innerSubmitButton={innerSubmitButton}
               />  
           </li>
         ))} 
