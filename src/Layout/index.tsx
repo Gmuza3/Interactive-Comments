@@ -20,6 +20,7 @@ const Layout = () => {
   }
   const innerSubmitButton =(id:number,e:FormEvent)=>{
     e.preventDefault();
+    setInputValue("");
     addInInnerReply(inputValue,id);
     setReplyPostId((prev) => ({...prev,[id]:false}));
   }
