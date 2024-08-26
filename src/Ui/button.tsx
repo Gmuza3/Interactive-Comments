@@ -24,10 +24,10 @@ const Button = ({
   return (
     <>
       {userName === "juliusomo" ? (
-        <div className="flex gap-2 lg-max:absolute lg-max:bottom-1 md-max:absolute md-max:right-14 md-max:z-10 md-max:bottom-5 md-max:flex-shrink-0">
+        <div className="flex gap-2">
           <button
             type="button"
-            className="flex items-center gap-2 px-2 py-1 text-red-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] font-sans font-semibold uppercase"
+            className="flex items-center gap-2 px-2 py-1 text-red-500 hover:bg-red-100 rounded-md w-[auto] h-[40px] font-sans font-semibold uppercase mobile-max:px-0 mobile-max:"
             onClick={() => postId !== undefined && text !== undefined 
                 && removePost(postId, text)}
           >
@@ -41,7 +41,7 @@ const Button = ({
           </button>
           <button
             type="button"
-            className="flex items-center gap-2 px-2 py-1 text-sky-900 hover:bg-[#a1a1aa] font-sans font-semibold rounded-md w-[auto] h-[40px] uppercase "
+            className="flex items-center gap-2 px-2 py-1 text-sky-900 hover:bg-[#a1a1aa] font-sans font-semibold rounded-md w-[auto] h-[40px] uppercase mobile-max:px-1   "
             onClick={() => postId !== undefined && handleShowButton?.(postId, content)}
           >
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +55,7 @@ const Button = ({
         </div>
       ) : (
         <button
-          className="flex items-center fill-[#5357B6] hover:fill-[#a1a1aa] text-blue border-none font-sans font-semibold hover:text-[#a1a1aa] gap-2 md-max:absolute md-max:right-14 md-max:z-10 md-max:bottom-5 md-max:flex-shrink-0"
+          className="flex items-center fill-[#5357B6] hover:fill-[#a1a1aa] text-blue border-none font-sans font-semibold hover:text-[#a1a1aa] gap-2 "
           onClick={() => postId !== undefined && toggleFunc?.(postId)}
           {...rest}
         >

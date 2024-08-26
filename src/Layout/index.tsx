@@ -33,11 +33,11 @@ const Layout = () => {
     <div className="w-full py-[50px]">
       <ul className="list-none flex flex-col items-center justify-center gap-2">
         {!isLoading && post.comments.map((item,index) => (
-          <li key={item.id} className="max-w-[65%] h-full flex flex-col items-start ss-max:max-w-[85%] mobile-max:max-w-full ">
+          <li key={item.id} className="max-w-[65%] h-full flex flex-col items-start sm-max:max-w-[85%] ss-max:min-w-[95%] ">
             <div className="flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 md-max:relative md-max:pb-[60px] md-max:p-4">
               <div 
-              className="flex flex-col items-center justify-center gap-4 pt-2 
-              sm-max:absolute sm-max:left-3 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-500 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
+              className="flex flex-col items-center justify-center gap-4 pt-2 md-max:min-w-[5%] flex-shrink-0
+              sm-max:absolute sm-max:left-4 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-500 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
               >
                 <span className="cursor-pointer" onClick={() => increase(item.id,"comments")}>
                   <svg className="fill-[#C5C6EF] hover:fill-[#1e40af]" width="11" height="11" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@ const Layout = () => {
               </div>
               <div className="flex flex-col items-start gap-5">
                 <div className="w-full flex justify-between items-center" >
-                    <div className="w-[80%] flex justify-start gap-5 items-center md-max:w-full">
+                    <div className="w-[80%] flex justify-start gap-5 items-center md-max:w-full mobile-max:justify-between">
                         <img src={item.user.image.png} alt="" />
                         <p className="text-nameBlack font-sans font-medium text-[16px]">{item.user.username}</p>
                         <span className="text-gray font-sans text-[14px]">{item.createdAt}</span>    
@@ -63,7 +63,7 @@ const Layout = () => {
                     <span className="text-gray font-sans text-[16px]">{item.content}</span>
                 </div>
               </div>
-              <div className="min-w-[15%] flex justify-end  md-max:absolute md-max:right-14 md-max:z-10 md-max:bottom-5 md-max:flex-shrink-0">
+              <div className="min-w-[15%] flex justify-end  md-max:absolute md-max:right-5 md-max:z-10 md-max:bottom-5 md-max:flex-shrink-0">
                   <button 
                     className="flex items-center fill-[#5357B6] hover:fill-[#a1a1aa] text-blue border-none font-sans font-semibold hover:text-[#a1a1aa] gap-2"
                     onClick={() => toggleFunc(item.id)}
@@ -76,7 +76,14 @@ const Layout = () => {
               </div>
             </div> 
             {replyPostId[item.id] &&  (
-              <CurrentUserReplies inputValue={inputValue} SubmitButton={SubmitButton} InputChange={InputChange} index={index} id={item.id} post={post}/>
+              <CurrentUserReplies 
+                inputValue={inputValue} 
+                SubmitButton={SubmitButton} 
+                InputChange={InputChange} 
+                index={index} 
+                id={item.id} 
+                post={post}
+              />
             )}
               <ExistingReplyes 
               setReplyPostId={setReplyPostId} 

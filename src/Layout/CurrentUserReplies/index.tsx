@@ -21,25 +21,25 @@ const CurrentUserReplies = (props:Props) => {
   };
   
   return (
-        <div className="bg-white border border-transparent rounded-lg p-7 mt-2 w-full flex justify-between gap-5">
+        <div className="bg-white border border-transparent rounded-lg p-7 mt-2 w-full flex justify-between gap-5 ss-max:gap-3 md-max:p-4">
             {post && (
-               <div className="w-[10%] mt-2">
-                   <img src={post.currentUser.image.png} alt="" />  
+               <div className="flex-shrink-0 mt-2">
+                   <img src={post.currentUser.image.png} alt=""  className="w-[60px] h-[60px] mobile-max:w-[50px] mobile-max:h-[50px]"/>  
                </div>
             )}
             <form 
               action="" 
-              className="w-[90%] flex gap-9 mt-3" 
+              className="w-[95%] flex gap-5 mt-3 mobile-max:gap-3" 
               onSubmit={(e) => SubmitButton(id, e)}
             >
                 <textarea 
                     placeholder="Write Comment" 
-                    className="w-full max-w-[65%] min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
+                    className="w-full min-w-[50%]  min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
                     value={inputValue} 
                     onChange={InputChange}
                     onKeyDown={handleKeyDown}
                 />
-                <div className="flex gap-4 w-[35%]">
+                <div className="flex gap-4 w-[25%] flex-shrink-0 mobile-max:w-[35%] ss-max:w-[30%]">
                     <button type="submit" className="px-4 py-1 text-[#fff] bg-blue  rounded-[6px]  w-[auto] h-[40px] uppercase hover:bg-slate-300">Reply</button>
                 </div>
             </form>

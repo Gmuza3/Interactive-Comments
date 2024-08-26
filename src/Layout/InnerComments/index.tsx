@@ -31,7 +31,7 @@ const InnerComments = (props: User) => {
     setEditText,
     commentsId,
   } = props;
-
+  console.log(innerReplies)
   return (
     <ul className="w-full ">
       {innerReplies.length > 0 &&

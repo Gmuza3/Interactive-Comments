@@ -21,8 +21,7 @@ type ReplyProps = {
 };
 
 const ExistingReplies = (props: ReplyProps) => {
-  const { updatePost, increase, decrease } =
-    usePostContext() as PostTypes;
+  const { updatePost, increase, decrease } = usePostContext() as PostTypes;
   const {
     replies,
     commentsId,
@@ -63,10 +62,13 @@ const ExistingReplies = (props: ReplyProps) => {
           return (
             <li
               key={item.id ? item.id : index}
-              className="h-full w-full items-start list-none pl-16 pt-2 flex flex-col gap-0 "
+              className="h-full w-full items-start list-none pl-16 pt-2 flex flex-col gap-0  ss-max:pl-10 "
             >
-              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 lg-max:relative">
-                <div className="flex flex-col items-center justify-center gap-4 pt-2">
+              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 lg-max:relative lg-max:px-4 lg-max:pb-[60px]">
+                <div
+                  className="flex flex-col items-center justify-center gap-4 pt-2 lg-max:min-w-[5%] flex-shrink-0
+                sm-max:absolute sm-max:left-4 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-500 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
+                >
                   <span
                     className="cursor-pointer"
                     onClick={() => increase(item.id, "reply")}
@@ -97,15 +99,20 @@ const ExistingReplies = (props: ReplyProps) => {
                     </svg>
                   </span>
                 </div>
-                <div className="flex flex-col items-start gap-5 w-[80%]">
-                  <div className="w-full flex justify-between items-center">
-                    <div className="flex justify-start gap-4 items-center ">
-                      <img src={item.user.image.png} alt="" />
-                      <p className="text-nameBlack font-sans font-medium text-[16px]">
+                <div className="flex flex-col items-start gap-5 w-[80%] lg-max:w-full mobile-max:justify-between">
+                  <div className="w-full flex justify-between items-center ">
+                    <div className="flex justify-start gap-4 items-center mobile-max:gap-2 mobile-max:justify-between mobile-max:w-full ">
+                      {/* Adjusting image size on mobile-max screens */}
+                      <img
+                        src={item.user.image.png}
+                        alt=""
+                        className="w-[60px] h-[60px] mobile-max:w-[50px] mobile-max:h-[50px]"
+                      />
+                      <p className="text-nameBlack font-sans font-medium text-[16px] ">
                         {item.user.username}
                       </p>
                       {item.user.username === "juliusomo" && (
-                        <span className="font-montserrat font-bold text-xs text-white bg-blue px-2 py-1">
+                        <span className="font-montserrat font-semibold text-xs text-white bg-blue px-2 py-1">
                           YOU
                         </span>
                       )}
@@ -129,7 +136,7 @@ const ExistingReplies = (props: ReplyProps) => {
                           type="button"
                           className="px-4 py-1 text-[#fff] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
                           onClick={() => {
-                            updatePost(editText, commentsId, item.id,"reply");
+                            updatePost(editText, commentsId, item.id, "reply");
                             setShowEdit(null);
                             setEditText("");
                           }}
@@ -157,48 +164,47 @@ const ExistingReplies = (props: ReplyProps) => {
                   )}
                   {/* content which one is display */}
                 </div>
-                <div className="min-w-[15%] flex justify-end">
+
+                <div className="min-w-[15%] flex justify-end lg-max:absolute lg-max:right-5 lg-max:bottom-5">
                   <Button
                     postId={item.id}
                     handleShowButton={handleShowButton}
                     toggleFunc={toggleFunc}
                     content={item.content}
                     userName={item.user.username}
-                    text={'reply'}
+                    text={"reply"}
                   />
                 </div>
                 {/* buttons reply */}
               </div>
               {replyPostId[item.id] && (
                 <div key={item.id} className="w-full flex justify-end pt-2">
-                  <div className="w-[80%] bg-white border border-transparent rounded-lg p-7 mt-0 flex justify-between items-start gap-5">
+                  <div className="bg-white border border-transparent rounded-lg p-7 mt-2 w-full flex justify-between gap-5 ss-max:gap-3 md-max:p-4">
                     {user && (
-                      <div className="w-[10%] mt-2">
-                        <img src={user.image.png} alt="" />
+                      <div className="flex-shrink-0 mt-2">
+                        <img
+                          src={user.image.png}
+                          alt=""
+                          className="w-[60px] h-[60px] mobile-max:w-[50px] mobile-max:h-[50px]"
+                        />
                       </div>
                     )}
                     <form
                       action=""
-                      className="w-[90%] flex gap-9 mt-3"
-                      onSubmit={(e) => {
-                        innerSubmitButton(id, e);
-                        setReplyPostId((prev) => ({
-                          ...prev,
-                          [item.id]: false,
-                        }));
-                      }}
+                      className="w-[95%] flex gap-5 mt-3 mobile-max:gap-3"
+                      onSubmit={(e) => innerSubmitButton(id, e)}
                     >
                       <textarea
                         placeholder="Write Comment"
-                        className="w-full max-w-[65%] min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
+                        className="w-full min-w-[50%]  min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
                         value={inputValue}
                         onChange={InputChange}
                         onKeyDown={handleKeyDown}
                       />
-                      <div className="flex gap-4 w-[35%]">
+                      <div className="flex gap-4 w-[25%] flex-shrink-0 mobile-max:w-[35%] ss-max:w-[30%]">
                         <button
                           type="submit"
-                          className="px-4 py-1 text-[#fff] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
+                          className="px-4 py-1 text-[#fff] bg-blue  rounded-[6px]  w-[auto] h-[40px] uppercase hover:bg-slate-300"
                         >
                           Reply
                         </button>
@@ -208,17 +214,17 @@ const ExistingReplies = (props: ReplyProps) => {
                 </div>
               )}
               {item.user.username === "ramsesmiron" && (
-                <InnerComments 
-                  innerReplies={innerReplies} 
-                  replies={replies} 
-                  handleKeyDown={handleKeyDown} 
-                  handleShowButton={handleShowButton} 
-                  toggleFunc={toggleFunc}  
-                  showEdit={showEdit} 
+                <InnerComments
+                  innerReplies={innerReplies}
+                  replies={replies}
+                  handleKeyDown={handleKeyDown}
+                  handleShowButton={handleShowButton}
+                  toggleFunc={toggleFunc}
+                  showEdit={showEdit}
                   editText={editText}
                   setEditText={setEditText}
-                  setShowEdit={setShowEdit} 
-                  commentsId ={commentsId} 
+                  setShowEdit={setShowEdit}
+                  commentsId={commentsId}
                 />
               )}
               {/* add form just form */}
