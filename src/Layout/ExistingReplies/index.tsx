@@ -3,6 +3,7 @@ import { InnerReplies, Reply, User } from "../../Static/types";
 import { PostTypes, usePostContext } from "../../Store/Post.context";
 import InnerComments from "../InnerComments";
 import Button from "../../Ui/button";
+import CurrentUserReplies from "../CurrentUserReplies";
 
 type ReplyProps = {
   replies: Reply[];
@@ -11,13 +12,11 @@ type ReplyProps = {
   replyPostId: { [key: number]: boolean };
   user: User;
   InputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  innerSubmitButton: (id: number, e: FormEvent) => void;
+  innerSubmitButton: (id: number, e: FormEvent, innerId: number) => void;
   inputValue: string;
   id: number;
-  setReplyPostId: React.Dispatch<
-    React.SetStateAction<{ [key: number]: boolean }>
-  >;
   innerReplies: InnerReplies[];
+  SubmitButton?: (id: number, e: FormEvent) => void;
 };
 
 const ExistingReplies = (props: ReplyProps) => {
@@ -31,7 +30,6 @@ const ExistingReplies = (props: ReplyProps) => {
     inputValue,
     InputChange,
     id,
-    setReplyPostId,
     innerReplies,
     innerSubmitButton,
   } = props;
@@ -48,12 +46,6 @@ const ExistingReplies = (props: ReplyProps) => {
       setEditText(currentText);
     }
   };
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      innerSubmitButton(id, e);
-    }
-  };
 
   return (
     <ul className="w-full">
@@ -64,17 +56,17 @@ const ExistingReplies = (props: ReplyProps) => {
               key={item.id ? item.id : index}
               className="h-full w-full items-start list-none pl-16 pt-2 flex flex-col gap-0  ss-max:pl-10 "
             >
-              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 lg-max:relative lg-max:px-4 lg-max:pb-[60px]">
+              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 lg-max:relative lg-max:px-4 lg-max:pb-[75px]">
                 <div
                   className="flex flex-col items-center justify-center gap-4 pt-2 lg-max:min-w-[5%] flex-shrink-0
-                sm-max:absolute sm-max:left-4 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-500 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
+                sm-max:absolute sm-max:left-4 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-200 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
                 >
                   <span
                     className="cursor-pointer"
                     onClick={() => increase(item.id, "reply")}
                   >
                     <svg
-                      className="fill-[#C5C6EF] hover:fill-[#1e40af]"
+                      className="fill-slate-400 hover:fill-[#1e40af]"
                       width="11"
                       height="11"
                       xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +82,7 @@ const ExistingReplies = (props: ReplyProps) => {
                     onClick={() => decrease(item.id, "reply")}
                   >
                     <svg
-                      className="fill-[#C5C6EF] hover:fill-[#1e40af]"
+                      className="fill-slate-400 hover:fill-[#1e40af]"
                       width="11"
                       height="3"
                       xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +94,6 @@ const ExistingReplies = (props: ReplyProps) => {
                 <div className="flex flex-col items-start gap-5 w-[80%] lg-max:w-full mobile-max:justify-between">
                   <div className="w-full flex justify-between items-center ">
                     <div className="flex justify-start gap-4 items-center mobile-max:gap-2 mobile-max:justify-between mobile-max:w-full ">
-                      {/* Adjusting image size on mobile-max screens */}
                       <img
                         src={item.user.image.png}
                         alt=""
@@ -129,12 +120,11 @@ const ExistingReplies = (props: ReplyProps) => {
                         className="w-full min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
-                        onKeyDown={handleKeyDown}
                       />
-                      <div className="flex gap-4 w-[35%]">
+                      <div className="flex gap-4 w-[35%] pt-2">
                         <button
                           type="button"
-                          className="px-4 py-1 text-[#fff] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
+                          className="px-4 py-1 font-montserrat ss-max:px-2 ss-max:py-0 text-[#fff] text-[14px] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
                           onClick={() => {
                             updatePost(editText, commentsId, item.id, "reply");
                             setShowEdit(null);
@@ -145,7 +135,7 @@ const ExistingReplies = (props: ReplyProps) => {
                         </button>
                         <button
                           type="button"
-                          className="px-4 py-1 text-[#fff] bg-red-500 rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
+                          className="px-4 py-1 font-montserrat ss-max:px-2 ss-max:py-0 text-[#fff] text-[14px] bg-red-500 rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
                           onClick={() => {
                             setShowEdit(null);
                             setEditText("");
@@ -156,15 +146,17 @@ const ExistingReplies = (props: ReplyProps) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full">
-                      <span className="text-gray font-sans text-[16px]">
-                        {item.content}
-                      </span>
+                    <div className="w-full h-[100%]">
+                      <textarea
+                        cols={100}
+                        readOnly
+                        className="w-full min-h-[100px] max-h-[110px] outline-none text-gray font-sans text-[16px] resize-none overflow-auto leading-tight p-0"
+                        value={item.content}
+                      >
+                      </textarea>
                     </div>
                   )}
-                  {/* content which one is display */}
                 </div>
-
                 <div className="min-w-[15%] flex justify-end lg-max:absolute lg-max:right-5 lg-max:bottom-5">
                   <Button
                     postId={item.id}
@@ -175,49 +167,25 @@ const ExistingReplies = (props: ReplyProps) => {
                     text={"reply"}
                   />
                 </div>
-                {/* buttons reply */}
               </div>
               {replyPostId[item.id] && (
                 <div key={item.id} className="w-full flex justify-end pt-2">
-                  <div className="bg-white border border-transparent rounded-lg p-7 mt-2 w-full flex justify-between gap-5 ss-max:gap-3 md-max:p-4">
-                    {user && (
-                      <div className="flex-shrink-0 mt-2">
-                        <img
-                          src={user.image.png}
-                          alt=""
-                          className="w-[60px] h-[60px] mobile-max:w-[50px] mobile-max:h-[50px]"
-                        />
-                      </div>
-                    )}
-                    <form
-                      action=""
-                      className="w-[95%] flex gap-5 mt-3 mobile-max:gap-3"
-                      onSubmit={(e) => innerSubmitButton(id, e)}
-                    >
-                      <textarea
-                        placeholder="Write Comment"
-                        className="w-full min-w-[50%]  min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
-                        value={inputValue}
-                        onChange={InputChange}
-                        onKeyDown={handleKeyDown}
-                      />
-                      <div className="flex gap-4 w-[25%] flex-shrink-0 mobile-max:w-[35%] ss-max:w-[30%]">
-                        <button
-                          type="submit"
-                          className="px-4 py-1 text-[#fff] bg-blue  rounded-[6px]  w-[auto] h-[40px] uppercase hover:bg-slate-300"
-                        >
-                          Reply
-                        </button>
-                      </div>
-                    </form>
-                  </div>
+                  <CurrentUserReplies
+                    inputValue={inputValue}
+                    innerSubmitButton={innerSubmitButton}
+                    InputChange={InputChange}
+                    index={index}
+                    id={id}
+                    user={user}
+                    context="innerReply"
+                    innerId={item.id}
+                  />
                 </div>
               )}
               {item.user.username === "ramsesmiron" && (
                 <InnerComments
                   innerReplies={innerReplies}
                   replies={replies}
-                  handleKeyDown={handleKeyDown}
                   handleShowButton={handleShowButton}
                   toggleFunc={toggleFunc}
                   showEdit={showEdit}
@@ -227,7 +195,6 @@ const ExistingReplies = (props: ReplyProps) => {
                   commentsId={commentsId}
                 />
               )}
-              {/* add form just form */}
             </li>
           );
         })}

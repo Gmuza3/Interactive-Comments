@@ -8,7 +8,6 @@ type User = {
   replies: Reply[];
   toggleFunc: (id: number) => void;
   handleShowButton: (id: number, currentText: string) => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   showEdit: number | null;
   editText: string;
   setShowEdit: React.Dispatch<React.SetStateAction<number | null>>;
@@ -17,13 +16,11 @@ type User = {
 };
 
 const InnerComments = (props: User) => {
-  const { updatePost, increase, decrease } =
-    usePostContext() as PostTypes;
+  const { updatePost, increase, decrease } = usePostContext() as PostTypes;
   const {
     innerReplies,
     replies,
     toggleFunc,
-    handleKeyDown,
     handleShowButton,
     showEdit,
     editText,
@@ -31,7 +28,6 @@ const InnerComments = (props: User) => {
     setEditText,
     commentsId,
   } = props;
-  console.log(innerReplies)
   return (
     <ul className="w-full ">
       {innerReplies.length > 0 &&
@@ -39,16 +35,19 @@ const InnerComments = (props: User) => {
           return (
             <li
               key={index}
-              className="h-full w-full list-none pl-16 pt-2 flex flex-col items-start gap-2 "
+              className="h-full w-full items-start list-none pl-16 pt-2 flex flex-col gap-0 ss-max:pl-8"
             >
-              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8">
-                <div className="flex flex-col items-center justify-center gap-4 pt-2">
+              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 ss-max:px-1 lg-max:relative lg-max:px-2 lg-max:pb-[75px] ">
+                <div
+                  className="flex flex-col items-center justify-center gap-4 pt-2 lg-max:min-w-[5%] flex-shrink-0
+                sm-max:absolute sm-max:left-2 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-200 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
+                >
                   <span
                     className="cursor-pointer"
                     onClick={() => increase(item.id, "innerReply")}
                   >
                     <svg
-                      className="fill-[#C5C6EF] hover:fill-[#1e40af]"
+                      className="fill-slate-400 hover:fill-[#1e40af]"
                       width="11"
                       height="11"
                       xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +63,7 @@ const InnerComments = (props: User) => {
                     onClick={() => decrease(item.id, "innerReply")}
                   >
                     <svg
-                      className="fill-[#C5C6EF] hover:fill-[#1e40af]"
+                      className="fill-slate-400 hover:fill-[#1e40af]"
                       width="11"
                       height="3"
                       xmlns="http://www.w3.org/2000/svg"
@@ -73,10 +72,14 @@ const InnerComments = (props: User) => {
                     </svg>
                   </span>
                 </div>
-                <div className="flex flex-col items-start gap-5 w-[80%] ">
+                <div className="flex flex-col items-start gap-5 w-[80%] lg-max:w-full mobile-max:justify-between">
                   <div className="w-full flex justify-between items-center">
-                    <div className="flex justify-start gap-4 items-center ">
-                      <img src={replies[1].user.image.png} alt="" />
+                    <div className="flex justify-start gap-4 items-center mobile-max:gap-2 mobile-max:justify-between mobile-max:w-full">
+                      <img
+                        src={replies[1].user.image.png}
+                        alt=""
+                        className="w-[60px] h-[60px] mobile-max:w-[50px] mobile-max:h-[50px]"
+                      />
                       <p className="text-nameBlack font-sans font-medium text-[16px]">
                         {replies[1].user.username}
                       </p>
@@ -98,12 +101,11 @@ const InnerComments = (props: User) => {
                         className="w-full min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
-                        onKeyDown={handleKeyDown}
                       />
-                      <div className="flex gap-4 w-[35%]">
+                      <div className="flex gap-4 w-[35%] pt-2">
                         <button
                           type="button"
-                          className="px-4 py-1 text-[#fff] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
+                          className="px-4 py-1 font-montserrat ss-max:px-2 ss-max:py-0 text-[#fff] text-[14px] bg-blue rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
                           onClick={() => {
                             updatePost(editText, commentsId, item.id, "");
                             setShowEdit(null);
@@ -114,7 +116,7 @@ const InnerComments = (props: User) => {
                         </button>
                         <button
                           type="button"
-                          className="px-4 py-1 text-[#fff] bg-red-500 rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
+                          className="px-4 py-1 font-montserrat ss-max:px-2 ss-max:py-0 text-[#fff] text-[14px] bg-red-500 rounded-[6px] w-[auto] h-[40px] uppercase hover:bg-slate-300"
                           onClick={() => {
                             setShowEdit(null);
                             setEditText("");
@@ -126,20 +128,25 @@ const InnerComments = (props: User) => {
                     </div>
                   ) : (
                     <div className="w-full">
-                      <span className="text-gray font-sans text-[16px]">
-                        {item.content}
-                      </span>
+                      <textarea
+                        cols={100}
+                        readOnly
+                        className="min-h-[75px] max-h-[150px] w-full outline-none text-gray font-sans text-[16px] resize-none overflow-auto leading-tight p-0"
+                        value={item.content}
+                      >
+                      </textarea>
                     </div>
                   )}
                 </div>
-                <div className="min-w-[15%] flex justify-end">
+                <div className="min-w-[15%] flex justify-end lg-max:absolute lg-max:right-1 lg-max:bottom-5">
                   <Button
                     postId={item.id}
                     handleShowButton={handleShowButton}
                     toggleFunc={toggleFunc}
                     content={item.content}
                     userName={item.user.username}
-                    text={''}
+                    text={"juliusomo"}
+                    context={"innerReply"}
                   />
                 </div>
               </div>

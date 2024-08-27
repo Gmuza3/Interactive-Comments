@@ -20,8 +20,8 @@ export default {
       },
       screens: {
         "mobile-max": { max: "390px" },
-        "ss-max": { max: "490px" },
-        "sm-max": { max: "680px" },
+        "ss-max": { max: "520px" },
+        "sm-max": { max: "740px" },
         "md-max": { max: "860px" },
         "lg-max": { max: "1024px" },
         "lgx-max": { max: "1080px" },

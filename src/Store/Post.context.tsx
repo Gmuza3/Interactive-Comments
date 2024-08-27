@@ -60,7 +60,6 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
   //     localStorage.setItem('postState',JSON.stringify(postState));
   //   }
   // },[postState])
-  console.log(postState);
   if (error) {
     return <div>{error.message}</div>;
   }
