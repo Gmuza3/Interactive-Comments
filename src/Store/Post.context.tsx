@@ -55,11 +55,6 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
     }
   }, [post]);
 
-  // useEffect(() =>{
-  //   if(postState){
-  //     localStorage.setItem('postState',JSON.stringify(postState));
-  //   }
-  // },[postState])
   if (error) {
     return <div>{error.message}</div>;
   }

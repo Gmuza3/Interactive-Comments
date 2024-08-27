@@ -29,8 +29,7 @@ const Layout = () => {
   const toggleFunc = (id:number) =>{
     setReplyPostId((prev) => ({...prev, [id]: !prev[id] }));
   }
-  // const gela =JSON.parse(localStorage.getItem('postState') || "null");
-  // console.log(gela)
+
   return (
     <div className="w-full py-[50px]">
       <ul className="list-none flex flex-col items-center justify-center gap-2">
