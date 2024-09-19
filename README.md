@@ -1,5 +1,7 @@
 # React + TypeScript + Vite
 
+To start the project you need to create a new terminal and run the npx json-server ./src/Data/data.json command to have data, without it there will be a ...loading state!!!!!
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
