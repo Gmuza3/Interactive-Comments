@@ -23,6 +23,7 @@ export type PostTypes = {
   ) => void;
   comment: string[];
   addInInnerReply: (text: string, id: number) => void;
+  addComments: (text: string) => void;
 };
 
 const PostContext = createContext<PostTypes | null>(null);
@@ -154,15 +155,15 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
     const target = new Date(targetDate);
 
     if (isNaN(target.getTime())) {
-      throw new Error('Invalid date');
+      throw new Error("Invalid date");
     }
-  
+
     const diffInMilliseconds = now.getTime() - target.getTime();
     const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
-  
+
     if (diffInDays > 1) {
       return `${diffInDays} days ago`;
     } else if (diffInDays === 1) {
@@ -183,8 +184,8 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
   const addPosts = (text: string, id: number) => {
     if (!postState) return;
     setComment((prev) => [...prev, text]);
-    const now =new Date()
-    const createdAt = timeAgo(now)
+    const now = new Date();
+    const createdAt = timeAgo(now);
     const updatedComments = postState.comments.map((item) => {
       if (item.id === id) {
         const newReply: Reply = {
@@ -264,8 +265,8 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
   };
   const addInInnerReply = (text: string, id: number) => {
     if (!postState) return;
-    const now =new Date()
-    const createdAt = timeAgo(now)
+    const now = new Date();
+    const createdAt = timeAgo(now);
     const updatedComments = postState.comments.map((comment) => {
       if (comment.id === id) {
         const newReply: Reply = {
@@ -293,6 +294,29 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
     setPostState({ ...postState, comments: updatedComments });
   };
 
+  const addComments = (text: string) => {
+    if (!postState) return;
+
+    const newComment = {
+      id: Date.now(),
+      content: text,
+      createdAt: timeAgo(new Date()),
+      score: 0,
+      user: {
+        image: {
+          png: "./images/avatars/image-juliusomo.png",
+          webp: "./images/avatars/image-juliusomo.webp",
+        },
+        username: "juliusomo",
+      },
+      replies: [],
+      innerReplies: [],
+    };
+
+    const updatedComments = [...postState.comments, newComment];
+    setPostState({ ...postState, comments: updatedComments });
+  };
+
   return (
     <PostContext.Provider
       value={{
@@ -305,6 +329,7 @@ const PostContextPrvoider = ({ children }: PropsWithChildren) => {
         updatePost,
         comment,
         addInInnerReply,
+        addComments,
       }}
     >
       {children}

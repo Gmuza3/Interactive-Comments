@@ -25,6 +25,7 @@ export default {
         "md-max": { max: "860px" },
         "lg-max": { max: "1024px" },
         "lgx-max": { max: "1080px" },
+        "lgx":{ min: '1081'},
         "xl-max": { max: "1280px" },
         "2xl-max": { max: "1536px" },
         "xxl-max": { max: "1800px" },

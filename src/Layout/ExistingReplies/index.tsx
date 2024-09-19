@@ -48,7 +48,7 @@ const ExistingReplies = (props: ReplyProps) => {
   };
 
   return (
-    <ul className="w-full">
+    <ul className="w-full h-full">
       {replies &&
         replies.map((item, index) => {
           return (
@@ -56,7 +56,7 @@ const ExistingReplies = (props: ReplyProps) => {
               key={item.id ? item.id : index}
               className="h-full w-full items-start list-none pl-16 pt-2 flex flex-col gap-0  ss-max:pl-10 "
             >
-              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 lg-max:relative lg-max:px-4 lg-max:pb-[75px]">
+              <div className="h-full w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 lg-max:relative lg-max:px-4 lg-max:pb-[75px]">
                 <div
                   className="flex flex-col items-center justify-center gap-4 pt-2 lg-max:min-w-[5%] flex-shrink-0
                 sm-max:absolute sm-max:left-4 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-200 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
@@ -91,7 +91,7 @@ const ExistingReplies = (props: ReplyProps) => {
                     </svg>
                   </span>
                 </div>
-                <div className="flex flex-col items-start gap-5 w-[80%] lg-max:w-full mobile-max:justify-between">
+                <div className="flex flex-col items-start gap-5 w-[80%] lg-max:w-full mobile-max:justify-between h-[100%]">
                   <div className="w-full flex justify-between items-center ">
                     <div className="flex justify-start gap-4 items-center mobile-max:gap-2 mobile-max:justify-between mobile-max:w-full ">
                       <img
@@ -117,7 +117,7 @@ const ExistingReplies = (props: ReplyProps) => {
                     <div className="w-full">
                       <textarea
                         placeholder="Write Comment"
-                        className="w-full min-h-[100px] px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none overflow-auto leading-relaxed"
+                        className="w-full h-auto px-4 py-2 text-sm font-normal text-gray-900 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none resize-none leading-relaxed"
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
                       />
@@ -146,14 +146,10 @@ const ExistingReplies = (props: ReplyProps) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-[100%]">
-                      <textarea
-                        cols={100}
-                        readOnly
-                        className="w-full min-h-[100px] max-h-[110px] outline-none text-gray font-sans text-[16px] resize-none overflow-auto leading-tight p-0"
-                        value={item.content}
-                      >
-                      </textarea>
+                    <div className="w-full">
+                      <span className="w-full text-gray font-sans text-[16px] leading-tight p-0 whitespace-pre-wrap break-words max-w-prose">
+                        {item.content}
+                      </span>
                     </div>
                   )}
                 </div>

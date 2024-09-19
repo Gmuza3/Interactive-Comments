@@ -37,9 +37,9 @@ const InnerComments = (props: User) => {
               key={index}
               className="h-full w-full items-start list-none pl-16 pt-2 flex flex-col gap-0 ss-max:pl-8"
             >
-              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 ss-max:px-1 lg-max:relative lg-max:px-2 lg-max:pb-[75px] ">
+              <div className="w-full flex justify-between items-start gap-6 bg-white border-[1px] border-transparent rounded-[8px] p-8 ss-max:px-1 lgx-max:relative lgx-max:px-3 lgx-max:pb-[75px]  ">
                 <div
-                  className="flex flex-col items-center justify-center gap-4 pt-2 lg-max:min-w-[5%] flex-shrink-0
+                  className="flex flex-col items-center justify-center gap-4 pt-2 lgx-max:min-w-[5%] flex-shrink-0
                 sm-max:absolute sm-max:left-2 sm-max:bottom-4 sm-max:flex sm-max:flex-row sm-max:bg-slate-200 sm-max:py-1 sm-max:px-4 sm-max:flex-shrink-0"
                 >
                   <span
@@ -72,7 +72,7 @@ const InnerComments = (props: User) => {
                     </svg>
                   </span>
                 </div>
-                <div className="flex flex-col items-start gap-5 w-[80%] lg-max:w-full mobile-max:justify-between">
+                <div className="flex flex-col items-start gap-5 w-[80%] lgx-max:w-full mobile-max:justify-between">
                   <div className="w-full flex justify-between items-center">
                     <div className="flex justify-start gap-4 items-center mobile-max:gap-2 mobile-max:justify-between mobile-max:w-full">
                       <img
@@ -127,18 +127,14 @@ const InnerComments = (props: User) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full">
-                      <textarea
-                        cols={100}
-                        readOnly
-                        className="min-h-[75px] max-h-[150px] w-full outline-none text-gray font-sans text-[16px] resize-none overflow-auto leading-tight p-0"
-                        value={item.content}
-                      >
-                      </textarea>
+                    <div className="w-full break-words">
+                      <span className="min-h-[75px] max-h-[150px] w-full outline-none whitespace-pre-wrap text-gray font-sans text-[16px]  resize-none overflow-auto leading-tight p-0">
+                        {item.content}
+                      </span>
                     </div>
                   )}
                 </div>
-                <div className="min-w-[15%] flex justify-end lg-max:absolute lg-max:right-1 lg-max:bottom-5">
+                <div className="min-w-[15%] flex justify-end lgx-max:absolute lgx-max:right-2 lgx-max:bottom-5">
                   <Button
                     postId={item.id}
                     handleShowButton={handleShowButton}
