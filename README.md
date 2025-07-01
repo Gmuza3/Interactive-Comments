@@ -1,10 +1,23 @@
-# React + TypeScript + Vite
+# ⚛️ React + Vite + TypeScript
 
-To start the project you need to create a new terminal and run 
-npm install than the npx json-server ./src/Data/data.json command to have data, without it there will be a ...loading state!!!!!
+Interactive Comments is a modern web application that allows users to add posts, write comments, and have fun.  
+Built with **React**, **TypeScript**, and **Vite** for a fast and efficient development experience.
 
-run the app:
-npm run dev;
+🚀 How to Run the Project
+To run the project and load product data from the mock JSON file, follow these steps:
+
+Open the terminal in Visual Studio Code
+Run the following command to start the mock API server:
+npm install
+
+```bash
+npx json-server public/data/data.json
+
+```run app
+npm run dev
+
+----------------------------------------------------------------------
+
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
